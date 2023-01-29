@@ -47,8 +47,6 @@ class AddressParser:
             return self.splitRoadArr[self.lastPos]
     def getPostDir(self):
         if self.hasData:
-            print(self.splitRoadArr)
-            print(self.lastPos)
             return self.splitRoadArr[self.lastPos]
         
     def getRoadName(self):
@@ -79,7 +77,6 @@ class AddressParser:
 
 def test():
     hello = AddressParser("1", "none", None)
-    print(hello.getField())
 
 def processPreDirData(data):
     return AddressParser(data[0], data[1], data[2], "")
@@ -109,7 +106,6 @@ def findStTypeValue(arr, item):
 def findPostDirValue(arr, item):
     for i, val in enumerate(arr):
         if val.getObjectId() == item:
-            print(val.getPostDir())
             return i, val.getPostDir()
     return None, None
 
