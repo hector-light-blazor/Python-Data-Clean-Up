@@ -51,16 +51,15 @@ class AddressParser:
             end = self.splitLen
             for index in range(start, end):
                 results += self.splitRoadArr[index] + " "
-        elif len(self.preType) > 0 and len(self.preDir) == 0:
+        elif len(self.preDir) == 0 and len(self.preType) > 0:
+            for index in range(self.splitLen - 1):
+                results += self.splitRoadArr[index] + " "
+        elif len(self.preDir) > 0 and len(self.preType) == 0:
             start = 1
             end = self.splitLen
             for index in range(start, end):
                 results += self.splitRoadArr[index] + " "
-        elif len(self.preType) == 0 and len(self.preDir) > 0:
-            start = 0
-            end = self.splitLen - 1
-            for index in range(start, end):
-                results += self.splitRoadArr[index] + " "
+
         return results.strip()
                 
             
