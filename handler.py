@@ -1,15 +1,17 @@
 import arcpy, numpy
 
 LegacyStreetType = []
+directionalData = ['N', 'S', 'E', 'W']
 
 class AddressParser:
     # init constructor
-    def __init__(self, objectid, fullRoadName, preDir="", stType=""):
+    def __init__(self, objectid, fullRoadName, preDir="", stType="", postDir=""):
         self.roadName = fullRoadName.strip()
         self.splitRoadArr = fullRoadName.split()
         self.splitLen = len(self.splitRoadArr)
         self.preDir = preDir.strip() if preDir is not None else ""
         self.stType = stType.strip() if stType is not None else ""
+        self.postDir = postDir.strip() if postDir is not None else ""
         self.objectid = objectid
         self.hasData = len(self.roadName) > 1
         self.isEmpty = len(self.roadName) == 0
@@ -20,10 +22,13 @@ class AddressParser:
     def getObjectId(self):
         return self.objectid
     
-    def hasSingle(self):
-        hasPrefix = ['N', 'S', 'E', 'W']
-        return self.hasData and len(self.splitRoadArr[0]) == 1 and len(self.preDir) == 0 and self.splitRoadArr[0] in hasPrefix
+    def hasPreDir(self):
+        global directionalData
+        return self.hasData and len(self.splitRoadArr[0]) == 1 and self.splitRoadArr[0] in directionalData
     
+    def hasPostDir(self):
+        global directionalData
+        return self.hasData and len(self.splitRoadArra[self.splitLen - 1]) == 1 and self.splitRoadArr[0] in directionalData
     def hasStType(self):
         global LegacyStreetType
         return self.hasData and  len(self.stType) == 0 and self.splitRoadArr[self.splitLen - 1] in LegacyStreetType
@@ -107,7 +112,7 @@ def grabObjectIds(data):
 
 def startPreDirProcess(fs, fields):
     prefixDirValuesDirty = [processPreDirData(row) for row in arcpy.da.SearchCursor(fs, fields)]
-    filterPreDirOnlyUpdates = [i for i in prefixDirValuesDirty if i.hasSingle()]
+    filterPreDirOnlyUpdates = [i for i in prefixDirValuesDirty if i.hasPreDir()]
     objectIdsForUpdate = grabObjectIds(filterPreDirOnlyUpdates)
     if len(objectIdsForUpdate) == 2:
         return "Nothing To Update Pre Dir"
