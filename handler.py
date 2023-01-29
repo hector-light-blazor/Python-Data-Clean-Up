@@ -9,6 +9,7 @@ class AddressParser:
         self.roadName = fullRoadName.strip()
         self.splitRoadArr = fullRoadName.split()
         self.splitLen = len(self.splitRoadArr)
+        self.lastPos  = self.splitLen - 1 if self.splitLen > 0 else 0
         self.preDir = preDir.strip() if preDir is not None else ""
         self.stType = stType.strip() if stType is not None else ""
         self.postDir = postDir.strip() if postDir is not None else ""
@@ -28,10 +29,11 @@ class AddressParser:
     
     def hasPostDir(self):
         global directionalData
-        return self.hasData and len(self.splitRoadArra[self.splitLen - 1]) == 1 and self.splitRoadArr[0] in directionalData
+        return self.hasData and len(self.splitRoadArra[self.lastPos]) == 1 and self.splitRoadArr[0] in directionalData
+    
     def hasStType(self):
         global LegacyStreetType
-        return self.hasData and  len(self.stType) == 0 and self.splitRoadArr[self.splitLen - 1] in LegacyStreetType
+        return self.hasData and  len(self.stType) == 0 and self.splitRoadArr[self.lastPos] in LegacyStreetType
     
     def getIsEmpty(self):
         return self.isEmpty
@@ -42,7 +44,10 @@ class AddressParser:
     
     def getStType(self):
         if self.hasData:
-            return self.splitRoadArr[self.splitLen - 1]
+            return self.splitRoadArr[self.lastPos]
+    def getPostDir(self):
+        if self.hasData:
+            return self.splitRoadArr[self.lastPos]
         
     def getRoadName(self):
         results = ""
@@ -77,6 +82,9 @@ def test():
 def processPreDirData(data):
     return AddressParser(data[0], data[1], data[2], "")
 
+def processPostDirData(data):
+    return AddressParser(data[0],data[1], "", "", data[2])
+
 def processStTypeData(data):
     return AddressParser(data[0], data[1],"", data[2])
 
@@ -94,6 +102,12 @@ def findStTypeValue(arr, item):
     for i, val in enumerate(arr):
         if val.getObjectId() == item:
             return i, val.getStType()
+    return None, None
+
+def findPostDirValue(arr, item):
+    for i, val in enumerate(arr):
+        if val.getObjectId() == item:
+            return i, val.getPostDir()
     return None, None
 
 def findRoadName(arr, item):
@@ -128,6 +142,24 @@ def startPreDirProcess(fs, fields):
                 filterPreDirOnlyUpdates.pop(indexValue) # Remove from the list making it smaller
     return "Pre Dir Update Completed"
 
+
+def startPostDirProcess(fs, fields):
+    postDirValuesDirty = [processPostDirData(row) for row in arcpy.da.SearchCursor(fs, fields)]
+    filterPostDirOnlyUpdates = [i for i in postDirValuesDirty if i.hasPostDir()]
+    objectIdsForUpdate = grabObjectIds(filterPostDirOnlyUpdates)
+    if len(objectIdsForUpdate) == 2:
+        return "Nothing To Update Pre Dir"
+    with arcpy.da.UpdateCursor(fs, ['SuffixDirect', 'objectid'], where_clause="objectid in %s" % objectIdsForUpdate) as cursor:
+        #Loop through all the rows
+        for row in cursor:
+            #Search the post Dir Value
+            indexValue, value = findPostDirValue(filterPostDirOnlyUpdates, row[1])
+            # if prefixvalue is not None
+            if value is not None and indexValue is not None:
+                row[0] = value
+                cursor.updateRow(row) #finally update the row
+                filterPostDirOnlyUpdates.pop(indexValue) # Remove from the list making it smaller
+    return "Pre Dir Update Completed"
 
 def startStTypeProcess(fs, fields):
     StreetTypeValuesDirty = [processStTypeData(row) for row in arcpy.da.SearchCursor(fs, fields)]

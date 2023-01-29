@@ -30,9 +30,12 @@ print("PARSING DIRTY DATA")
 # prefixDirValuesDirtyAddressPoints = startPreDirProcess(feature_address_points, ['fullname', 'objectid', 'prd'])
 
 # Update the fields address
+responseFromPostDir = startPostDirProcess(feature_road_centerlines, ['objectid', 'fullname', 'SuffixDirect'])
+print(responseFromPostDir)
 
 responseFromPreDir = startPreDirProcess(feature_road_centerlines, ['objectid', 'fullname', 'PrefixDir'])
 print(responseFromPreDir)
+
 responseFromStreetType = startStTypeProcess(feature_road_centerlines, ['objectid', 'fullname', 'StreetType'])
 print(responseFromStreetType)
 
