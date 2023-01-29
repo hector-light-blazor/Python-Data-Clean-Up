@@ -29,7 +29,7 @@ class AddressParser:
     
     def hasPostDir(self):
         global directionalData
-        return self.hasData and len(self.splitRoadArr[self.lastPos]) == 1 and self.splitRoadArr[0] in directionalData
+        return self.hasData and len(self.splitRoadArr[self.lastPos]) == 1 and self.splitRoadArr[self.lastPos] in directionalData
     
     def hasStType(self):
         global LegacyStreetType
@@ -47,6 +47,8 @@ class AddressParser:
             return self.splitRoadArr[self.lastPos]
     def getPostDir(self):
         if self.hasData:
+            print(self.splitRoadArr)
+            print(self.lastPos)
             return self.splitRoadArr[self.lastPos]
         
     def getRoadName(self):
@@ -107,6 +109,7 @@ def findStTypeValue(arr, item):
 def findPostDirValue(arr, item):
     for i, val in enumerate(arr):
         if val.getObjectId() == item:
+            print(val.getPostDir())
             return i, val.getPostDir()
     return None, None
 
@@ -145,6 +148,7 @@ def startPreDirProcess(fs, fields):
 
 def startPostDirProcess(fs, fields):
     postDirValuesDirty = [processPostDirData(row) for row in arcpy.da.SearchCursor(fs, fields)]
+    print(postDirValuesDirty)
     filterPostDirOnlyUpdates = [i for i in postDirValuesDirty if i.hasPostDir()]
     objectIdsForUpdate = grabObjectIds(filterPostDirOnlyUpdates)
     if len(objectIdsForUpdate) == 2:

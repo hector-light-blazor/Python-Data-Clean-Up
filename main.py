@@ -33,15 +33,15 @@ print("PARSING DIRTY DATA")
 responseFromPostDir = startPostDirProcess(feature_road_centerlines, ['objectid', 'fullname', 'SuffixDirect'])
 print(responseFromPostDir)
 
-responseFromPreDir = startPreDirProcess(feature_road_centerlines, ['objectid', 'fullname', 'PrefixDir'])
-print(responseFromPreDir)
+# responseFromPreDir = startPreDirProcess(feature_road_centerlines, ['objectid', 'fullname', 'PrefixDir'])
+# print(responseFromPreDir)
 
-responseFromStreetType = startStTypeProcess(feature_road_centerlines, ['objectid', 'fullname', 'StreetType'])
-print(responseFromStreetType)
+# responseFromStreetType = startStTypeProcess(feature_road_centerlines, ['objectid', 'fullname', 'StreetType'])
+# print(responseFromStreetType)
 
-#Road Names must be final from street type and pre directional. Is dependant on those values.
-responseRoadNames = startRoadNameProcess(feature_road_centerlines, ['objectid', 'fullname', 'PrefixDir', 'StreetType'])
-print(responseRoadNames)
+# #Road Names must be final from street type and pre directional. Is dependant on those values.
+# responseRoadNames = startRoadNameProcess(feature_road_centerlines, ['objectid', 'fullname', 'PrefixDir', 'StreetType'])
+# print(responseRoadNames)
 
 
 print("Done Updating Everything")
