@@ -144,7 +144,6 @@ def startPreDirProcess(fs, fields):
 
 def startPostDirProcess(fs, fields):
     postDirValuesDirty = [processPostDirData(row) for row in arcpy.da.SearchCursor(fs, fields)]
-    print(postDirValuesDirty)
     filterPostDirOnlyUpdates = [i for i in postDirValuesDirty if i.hasPostDir()]
     objectIdsForUpdate = grabObjectIds(filterPostDirOnlyUpdates)
     if len(objectIdsForUpdate) == 2:
