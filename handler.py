@@ -148,7 +148,7 @@ def startPostDirProcess(fs, fields):
     filterPostDirOnlyUpdates = [i for i in postDirValuesDirty if i.hasPostDir()]
     objectIdsForUpdate = grabObjectIds(filterPostDirOnlyUpdates)
     if len(objectIdsForUpdate) == 2:
-        return "Nothing To Update Pre Dir"
+        return "Nothing To Update Post Dir"
     with arcpy.da.UpdateCursor(fs, ['SuffixDirect', 'objectid'], where_clause="objectid in %s" % objectIdsForUpdate) as cursor:
         #Loop through all the rows
         for row in cursor:
@@ -159,7 +159,7 @@ def startPostDirProcess(fs, fields):
                 row[0] = value
                 cursor.updateRow(row) #finally update the row
                 filterPostDirOnlyUpdates.pop(indexValue) # Remove from the list making it smaller
-    return "Pre Dir Update Completed"
+    return "Post Dir Update Completed"
 
 def startStTypeProcess(fs, fields):
     StreetTypeValuesDirty = [processStTypeData(row) for row in arcpy.da.SearchCursor(fs, fields)]
