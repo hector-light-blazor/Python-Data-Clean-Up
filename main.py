@@ -31,7 +31,7 @@ print("PARSING DIRTY DATA")
 
 # Update the fields address
 
-responseFromPreDir = startStTypeProcess(feature_road_centerlines, ['objectid', 'fullname', 'PrefixDir'])
+responseFromPreDir = startPreDirProcess(feature_road_centerlines, ['objectid', 'fullname', 'PrefixDir'])
 print(responseFromPreDir)
 responseFromStreetType = startStTypeProcess(feature_road_centerlines, ['objectid', 'fullname', 'StreetType'])
 print(responseFromStreetType)
