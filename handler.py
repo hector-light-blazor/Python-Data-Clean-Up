@@ -29,7 +29,7 @@ class AddressParser:
     
     def hasPostDir(self):
         global directionalData
-        return self.hasData and len(self.splitRoadArra[self.lastPos]) == 1 and self.splitRoadArr[0] in directionalData
+        return self.hasData and len(self.splitRoadArr[self.lastPos]) == 1 and self.splitRoadArr[0] in directionalData
     
     def hasStType(self):
         global LegacyStreetType
