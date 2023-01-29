@@ -107,10 +107,10 @@ def grabObjectIds(data):
 
 def startPreDirProcess(fs, fields):
     prefixDirValuesDirty = [processPreDirData(row) for row in arcpy.da.SearchCursor(fs, fields)]
-    filterPreDirOnlyUpdates = [i for i in StreetTypeValuesDirty if i.hasSingle()]
+    filterPreDirOnlyUpdates = [i for i in prefixDirValuesDirty if i.hasSingle()]
     objectIdsForUpdate = grabObjectIds(filterPreDirOnlyUpdates)
     if len(objectIdsForUpdate) == 2:
-        return "Nothing To Update Street Type"
+        return "Nothing To Update Pre Dir"
     with arcpy.da.UpdateCursor(fs, ['PrefixDir', 'objectid'], where_clause="objectid in %s" % objectIdsForUpdate) as cursor:
         #Loop through all the rows
         for row in cursor:
