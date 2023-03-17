@@ -209,7 +209,6 @@ def findTest():
 def grabObjectIds(data):
     allObjectsIdsForUpdate = str([i.getObjectId() for i in data]).replace("[", "(").replace("]", ")")
     return allObjectsIdsForUpdate
-
 def mainProcess(fs, fields):
     dirtyValues = [processMainData(row) for row in arcpy.da.SearchCursor(fs, fields)]
     objectIdsForUpdate = grabObjectIds(dirtyValues)
@@ -319,7 +318,20 @@ def unique_values(table, field):  ##uses numpy
     dataClean = [d for d in holdArr if len(d) > 0]
     LegacyStreetType = dataClean
     print(LegacyStreetType)
-    
+
+def getData(table, fields):
+    htmls = [row for row in arcpy.da.SearchCursor(table, fields)]
+    return htmls
+
+def updateData(table, field, datas, objectIdsForUpdate):
+    with arcpy.da.UpdateCursor(table, [field, 'OBJECTID'], where_clause="objectid in %s" % objectIdsForUpdate) as cursor:
+        #Loop through all the rows
+        for row in cursor:
+            phone = [x[1] for x in datas if x[0] == row[1]]
+            if len(phone) == 1:
+                row[0] = phone[0]
+                cursor.updateRow(row)
+    return "Road Name Completed"
     
     
     
